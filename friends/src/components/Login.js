@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader-spinner';
+import { login } from '../actions';
 
 class Login extends React.Component {
 	state = {
@@ -21,11 +22,16 @@ class Login extends React.Component {
 
 	handleLogin = (e) => {
 		e.preventDefault();
+		console.log(this.props.login(this.state.credentials));
+		//PROMISe when it resoved push the history back
+		this.props.login(this.state.credentials).then(() => {
+			this.props.history.push('/protected');
+		});
 	};
 
 	render() {
 		return (
-			<div class="loginPage">
+			<div className="loginPage">
 				<form onSubmit={this.handleLogin}>
 					<input
 						type="text"
@@ -48,7 +54,10 @@ class Login extends React.Component {
 
 const mapStateToProps = (state) => {
 	console.log('MSTP', state);
-	return {};
+	return {
+		loggingIn: state.loggingIn,
+		error: state.error
+	};
 };
 
 export default connect(mapStateToProps, { login })(Login);
